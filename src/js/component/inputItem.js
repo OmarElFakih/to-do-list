@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export function InputItem(props) {
 	const onEnter = e => {
 		if (e.keyCode == 13) {
-			props.onEnterDownMethod();
+			props.onEnterDownMethod(e.target.value);
 			e.target.value = "";
 		}
 	};
@@ -13,7 +13,8 @@ export function InputItem(props) {
 		<input
 			type="text"
 			className="list-group-item"
-			onChange={props.onChangeMethod}
+			onChange={e => props.onChangeMethod(e.target.value)}
+			value={props.value}
 			onKeyDown={onEnter}
 		/>
 	);
@@ -21,5 +22,6 @@ export function InputItem(props) {
 
 InputItem.propTypes = {
 	onChangeMethod: PropTypes.func,
-	onEnterDownMethod: PropTypes.func
+	onEnterDownMethod: PropTypes.func,
+	value: PropTypes.string
 };
