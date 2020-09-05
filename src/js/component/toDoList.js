@@ -13,14 +13,49 @@ export function ToDoList(Props) {
 	const getTodos = async () => {
 		try {
 			let response = await fetch(`${baseURL}/todos`, {
-				method: "GET",
-				mode: "no-cors"
+				method: "GET"
+				// mode: "no-cors"
 			});
 			if (response.ok) {
-				let todoList = await response.json;
+				let todoList = await response.json();
 				setTasks(todoList);
 			} else {
 				console.log("error obteniendo la lista");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const addNewTask = async () => {
+		try {
+			let post = await fetch(`${baseURL}/todos`, {
+				method: "POST",
+				body: JSON.stringify({
+					label: newTaskName,
+					done: false
+				})
+			});
+			if (post.ok) {
+				setNewTaskName("");
+				getTodos();
+			} else {
+				console.log("error actualizando la lista");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const deleteTask = async index => {
+		try {
+			let request = await fetch(`${baseURL}/todos/${index}`, {
+				method: "DELETE"
+			});
+			if (request.ok) {
+				getTodos();
+			} else {
+				console.log("error eliminando de la lista");
 			}
 		} catch (error) {
 			console.log(error);
@@ -40,7 +75,7 @@ export function ToDoList(Props) {
 			<ul className="list-group list-group-flush paper">
 				<InputItem
 					onChangeMethod={setNewTaskName}
-					// onEnterDownMethod={addNewTask}
+					onEnterDownMethod={addNewTask}
 					value={newTaskName}
 				/>
 				{tasks.map((currentTask, index) => {
@@ -48,7 +83,7 @@ export function ToDoList(Props) {
 						<TaskItem
 							key={index}
 							myTask={currentTask.label}
-							// method={e => DeleteTask(index)}
+							method={e => deleteTask(index)}
 						/>
 					);
 				})}
